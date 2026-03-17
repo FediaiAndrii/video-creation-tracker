@@ -161,8 +161,13 @@ function FormAddProject({ onAddProject }) {
 
   return (
     <form className="form-add-project" onSubmit={handleSubmit}>
-      <label>Project name</label>
-      <input type="text" value={name} onChange={e => setName(e.target.value)} />
+      <label>📝Project</label>
+      <input
+        type="text"
+        placeholder="name"
+        value={name}
+        onChange={e => setName(e.target.value)}
+      />
 
       <label>📷Image URL</label>
       <input
