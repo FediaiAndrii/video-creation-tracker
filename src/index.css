@@ -73,7 +73,7 @@ body {
   background-color: var(--color-lightest);
 }
 .sidebar li img {
-  border-radius: 50%;
+  border-radius: 7px;
   width: 100%;
   grid-row: span 2;
 }
