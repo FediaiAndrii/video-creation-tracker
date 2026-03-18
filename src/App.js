@@ -5,7 +5,7 @@ const initialProjects = [
     id: 118836,
     name: "Art Hiking",
     image: "https://picsum.photos/id/981/200",
-    format: "16:9",
+    resolution: "16:9",
     type: "Vlog",
     stages: {
       idea: true,
@@ -18,7 +18,7 @@ const initialProjects = [
     id: 933372,
     name: "Selfcare sport",
     image: "https://picsum.photos/id/655/200",
-    format: "4:3",
+    resolution: "4:3",
     type: "Timelaps",
     stages: {
       idea: true,
@@ -31,7 +31,7 @@ const initialProjects = [
     id: 499476,
     name: "Life design",
     image: "https://picsum.photos/id/686/200",
-    format: "4:5",
+    resolution: "4:5",
     type: "Vlog",
     stages: {
       idea: true,
@@ -48,6 +48,13 @@ const stageLabels = {
   edit: "Editing",
   publish: "Publishing",
 };
+
+function getCurrentStageLabel(project) {
+  const activeStageEntry = Object.entries(project.stages).find(
+    ([_, status]) => status === false,
+  );
+  return activeStageEntry ? stageLabels[activeStageEntry[0]] : "Done";
+}
 
 function Button({ children, onClick }) {
   return (
@@ -89,6 +96,7 @@ export default function App() {
           {showAddProject ? "Close" : "Add project"}
         </Button>
       </div>
+      {selectedProject && <ProjectRoadmap project={selectedProject} />}
     </div>
   );
 }
@@ -110,13 +118,8 @@ function ProjectList({ projects, selectedProject, onSelection }) {
 
 function Project({ project, selectedProject, onSelection }) {
   const isSelected = selectedProject?.id === project.id;
-  const activeStageEntry = Object.entries(project.stages).find(
-    ([_, status]) => status === false,
-  );
 
-  const currentStage = activeStageEntry
-    ? stageLabels[activeStageEntry[0]]
-    : "Done";
+  const currentStage = getCurrentStageLabel(project);
 
   return (
     <li className={isSelected ? "selected" : ""}>
@@ -133,6 +136,8 @@ function Project({ project, selectedProject, onSelection }) {
 function FormAddProject({ onAddProject }) {
   const [name, setName] = useState("");
   const [image, setImage] = useState("https://picsum.photos/200");
+  const [resolution, setResolution] = useState("16:9");
+  const [type, setType] = useState("");
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -144,8 +149,8 @@ function FormAddProject({ onAddProject }) {
       id,
       name,
       image: `${image}?=${id}`,
-      format: "FORMAT",
-      type: "TYPE",
+      resolution: resolution,
+      type: type,
       stages: {
         idea: false,
         shoot: false,
@@ -175,7 +180,100 @@ function FormAddProject({ onAddProject }) {
         value={image}
         onChange={e => setImage(e.target.value)}
       />
+
+      <label>🎞Resolution</label>
+      <select value={resolution} onChange={e => setResolution(e.target.value)}>
+        <option value="16 : 9">16 : 9</option>
+        <option value="4 : 3">4 : 3</option>
+        <option value="1 : 1">1 : 1</option>
+        <option value="4 : 5">4 : 5</option>
+        <option value="9 : 16">9 : 16</option>
+      </select>
+
+      <label>🤳Type</label>
+      <input
+        type="text"
+        placeholder="vlog / animation / ..."
+        value={type}
+        onChange={e => setType(e.target.value)}
+      ></input>
       <Button>Add</Button>
     </form>
+  );
+}
+
+function ProjectRoadmap({ project }) {
+  return (
+    <div className="project-roadmap">
+      <RoadmapHeader project={project} />
+      <RoadmapProgress stages={project.stages} />
+      <RoadmapStages project={project} />
+    </div>
+  );
+}
+
+function RoadmapHeader({ project }) {
+  const currentStage = getCurrentStageLabel(project);
+  return (
+    <header className="roadmap-header">
+      <div className="roadmap-info">
+        <label>Project name</label>
+        <h2>{project.name}</h2>
+
+        <label>Resolution</label>
+        <p>{project.resolution}</p>
+
+        <label>Type</label>
+        <p>{project.type}</p>
+
+        <label>Stage</label>
+        <p>{currentStage}</p>
+      </div>
+      <div className="roadmap-media">
+        <img src={project.image} alt={project.name}></img>
+      </div>
+    </header>
+  );
+}
+
+function RoadmapProgress({ stages }) {
+  const stagesArray = Object.entries(stages);
+
+  return (
+    <div className="roadmap-progress-bar">
+      {stagesArray.map(([stageKey, isComplited]) => (
+        <div
+          key={stageKey}
+          className={`stage-segment ${isComplited ? "completed" : ""}`}
+        >
+          {stageLabels[stageKey]}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function RoadmapStages({ project }) {
+  const stagesArray = Object.entries(project.stages);
+  return (
+    <div className="roadmap-stages">
+      {stagesArray.map(stage => (
+        <Stage key={stage[0]} stage={stage} />
+      ))}
+    </div>
+  );
+}
+
+function Stage({ stage }) {
+  const [stageKey, stageValue] = stage;
+  return (
+    <div className="roadmap-stage">
+      <h3 className="roadmap-stage__name">{stageKey}</h3>
+      <span
+        className={`roadmap-stage__status ${stageValue ? "completed" : ""}`}
+      >
+        {stageValue ? "Done" : "In process"}
+      </span>
+    </div>
   );
 }
