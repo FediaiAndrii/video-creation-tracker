@@ -4,6 +4,8 @@
   --color-medium: #ffa94d;
   --color-dark: #ff922b;
 
+  --color-green: #59b959a2;
+
   --color-grey-light: #dee2e6;
   --color-grey: #868e96;
   --color-black: #343a40;
@@ -203,9 +205,9 @@ form {
 }
 
 .stage-segment.completed {
-  background-color: var(--color-medium);
+  background-color: var(--color-green);
   color: var(--color-black);
-  border-right: 1px solid var(--color-dark);
+  border-right: 1px solid var(--color-grey);
 }
 
 .roadmap-stages {
@@ -249,7 +251,7 @@ form {
 }
 
 .roadmap-stage__status.completed {
-  background-color: rgba(89, 185, 89, 0.637);
+  background-color: #59b959a2;
   color: var(--color-black);
 }
 
