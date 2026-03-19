@@ -1,70 +1,60 @@
-# Getting Started with Create React App
+# 🎬 Video Creation Tracker
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)
+![Deployed on GitHub Pages](https://img.shields.io/badge/Deployed-GitHub_Pages-success?style=for-the-badge)
 
-## Available Scripts
+**[🔗 Переглянути Live Demo](https://FediaiAndrii.github.io/video-creation-tracker)**
 
-In the project directory, you can run:
+Цей проєкт — це React-додаток (Single Page Application) для креаторів та відеомейкерів. Він дозволяє створювати проєкти та детально відстежувати їхній прогрес на чотирьох ключових етапах: Planning, Shooting, Editing та Publishing.
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## ✨ Головні фічі (Features)
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **Управління проєктами:** Додавання нових проєктів із вказівкою назви, обкладинки, формату (16:9, 4:3 тощо) та типу відео.
+- **Динамічний Roadmap:** Кожен проєкт має власну дорожню карту з прогрес-баром.
+- **CRUD для завдань:** Всередині кожного етапу можна додавати нові таски, відмічати їх як виконані та видаляти.
+- **Розумна зміна статусів (Derived State):** Статус етапу (In process / Done) та загальний прогрес-бар оновлюються автоматично, щойно всі чекбокси всередині етапу відмічені як виконані.
+- **Сучасний UI/UX:** Кастомний дизайн без використання сторонніх UI-бібліотек (чистий CSS Flexbox/Grid), приховані скролбари, плавні анімації розгортання етапів.
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🧠 Архітектура та технічні виклики (What I Learned)
 
-### `npm run build`
+Цей проєкт став для мене чудовим майданчиком для глибокого розуміння управління станом (State Management) у React.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. **Глибоке копіювання об'єктів:** Реалізовано складну логіку оновлення вкладених структур даних (оновлення масиву тасок всередині об'єкта етапу, який знаходиться всередині об'єкта проєкту, який лежить у головному масиві стейту).
+2. **Проп-дрілінг (Prop Drilling):** Пройдено шлях передачі функцій (handlers) через 4-5 рівнів вкладеності компонентів. Це дало чітке розуміння того, чому у великих проєктах необхідні інструменти на кшталт Redux або Context API.
+3. **Похідний стан (Derived State):** Замість дублювання даних у стейті (наприклад, зберігання `isCompleted: true`), додаток обчислює статуси "на льоту" на основі масиву завдань за допомогою методу `.every()`. Це зробило архітектуру даних чистою та захищеною від багів десинхронізації.
+4. **Рефакторинг:** Проєкт був успішно декомпозований з одного монолітного файлу на модульну структуру дрібних, перевикористовуваних компонентів (`Sidebar`, `Roadmap`, `RoadmapStages` тощо).
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 🚀 Як запустити локально
 
-### `npm run eject`
+1. Склонуйте репозиторій:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+git clone [https://github.com/FediaiAndrii/video-creation-tracker.git](https://github.com/FediaiAndrii/video-creation-tracker.git)
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+2. Перейдіть у папку проєкту:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```bash
+cd video-creation-tracker
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+3. Встановіть залежності:
 
-## Learn More
+```bash
+npm install
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+4. Запустіть локальний сервер:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```bash
+npm start
+```
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Додаток буде доступний за адресою `http://localhost:3000`.
