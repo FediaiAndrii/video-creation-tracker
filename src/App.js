@@ -8,10 +8,42 @@ const initialProjects = [
     resolution: "16:9",
     type: "Vlog",
     stages: {
-      idea: true,
-      shoot: true,
-      edit: true,
-      publish: false,
+      idea: {
+        isCompleted: true,
+
+        tasks: [
+          { id: 1, text: "Film sketchbook in mountains", done: true },
+          { id: 2, text: "Record nature sounds", done: true },
+          { id: 3, text: "Record my speach", done: true },
+        ],
+      },
+      shoot: {
+        isCompleted: true,
+
+        tasks: [
+          { id: 4, text: "Film sketchbook opening", done: true },
+          { id: 5, text: "Film B roll", done: true },
+          { id: 6, text: "Film forest and mountains", done: true },
+        ],
+      },
+      edit: {
+        isCompleted: false,
+
+        tasks: [
+          { id: 7, text: "Video cutting", done: true },
+          { id: 8, text: "Sounds added", done: false },
+          { id: 9, text: "Video rendered", done: false },
+        ],
+      },
+      publish: {
+        isCompleted: false,
+
+        tasks: [
+          { id: 10, text: "Choose social media", done: false },
+          { id: 11, text: "Write description", done: false },
+          { id: 12, text: "cklickbait?", done: false },
+        ],
+      },
     },
   },
   {
@@ -21,10 +53,42 @@ const initialProjects = [
     resolution: "4:3",
     type: "Timelaps",
     stages: {
-      idea: true,
-      shoot: false,
-      edit: false,
-      publish: false,
+      idea: {
+        isCompleted: true,
+
+        tasks: [
+          { id: 1, text: "Film sketchbook in mountains", done: true },
+          { id: 2, text: "Record nature sounds", done: true },
+          { id: 3, text: "Record my speach", done: true },
+        ],
+      },
+      shoot: {
+        isCompleted: true,
+
+        tasks: [
+          { id: 4, text: "Film sketchbook opening", done: true },
+          { id: 5, text: "Film B roll", done: true },
+          { id: 6, text: "Film forest and mountains", done: true },
+        ],
+      },
+      edit: {
+        isCompleted: true,
+
+        tasks: [
+          { id: 7, text: "Video cutting", done: true },
+          { id: 8, text: "Sounds added", done: true },
+          { id: 9, text: "Video rendered", done: true },
+        ],
+      },
+      publish: {
+        isCompleted: false,
+
+        tasks: [
+          { id: 10, text: "Choose social media", done: true },
+          { id: 11, text: "Write description", done: false },
+          { id: 12, text: "cklickbait?", done: false },
+        ],
+      },
     },
   },
   {
@@ -34,10 +98,42 @@ const initialProjects = [
     resolution: "4:5",
     type: "Vlog",
     stages: {
-      idea: true,
-      shoot: true,
-      edit: false,
-      publish: false,
+      idea: {
+        isCompleted: true,
+
+        tasks: [
+          { id: 1, text: "Film sketchbook in mountains", done: true },
+          { id: 2, text: "Record nature sounds", done: true },
+          { id: 3, text: "Record my speach", done: true },
+        ],
+      },
+      shoot: {
+        isCompleted: false,
+
+        tasks: [
+          { id: 4, text: "Film sketchbook opening", done: true },
+          { id: 5, text: "Film B roll", done: true },
+          { id: 6, text: "Film forest and mountains", done: false },
+        ],
+      },
+      edit: {
+        isCompleted: false,
+
+        tasks: [
+          { id: 7, text: "Video cutting", done: false },
+          { id: 8, text: "Sounds added", done: false },
+          { id: 9, text: "Video rendered", done: false },
+        ],
+      },
+      publish: {
+        isCompleted: false,
+
+        tasks: [
+          { id: 10, text: "Choose social media", done: false },
+          { id: 11, text: "Write description", done: false },
+          { id: 12, text: "cklickbait?", done: false },
+        ],
+      },
     },
   },
 ];
@@ -51,7 +147,7 @@ const stageLabels = {
 
 function getCurrentStageLabel(project) {
   const activeStageEntry = Object.entries(project.stages).find(
-    ([_, status]) => status === false,
+    ([_, stage]) => stage.isCompleted === false,
   );
   return activeStageEntry ? stageLabels[activeStageEntry[0]] : "Done";
 }
@@ -152,10 +248,10 @@ function FormAddProject({ onAddProject }) {
       resolution: resolution,
       type: type,
       stages: {
-        idea: false,
-        shoot: false,
-        edit: false,
-        publish: false,
+        idea: { isCompleted: false, isOpen: false, tasks: [] },
+        shoot: { isCompleted: false, isOpen: false, tasks: [] },
+        edit: { isCompleted: false, isOpen: false, tasks: [] },
+        publish: { isCompleted: false, isOpen: false, tasks: [] },
       },
     };
     onAddProject(newProject);
@@ -241,10 +337,10 @@ function RoadmapProgress({ stages }) {
 
   return (
     <div className="roadmap-progress-bar">
-      {stagesArray.map(([stageKey, isComplited]) => (
+      {stagesArray.map(([stageKey, stageObj]) => (
         <div
           key={stageKey}
-          className={`stage-segment ${isComplited ? "completed" : ""}`}
+          className={`stage-segment ${stageObj.isCompleted ? "completed" : ""}`}
         >
           {stageLabels[stageKey]}
         </div>
@@ -265,14 +361,20 @@ function RoadmapStages({ project }) {
 }
 
 function Stage({ stage }) {
-  const [stageKey, stageValue] = stage;
+  const [stageKey, stageObj] = stage;
+  const [isOpen, setIsOpen] = useState(false);
+
+  function handleToggle() {
+    setIsOpen(show => !show);
+  }
+
   return (
     <div className="roadmap-stage">
       <h3 className="roadmap-stage__name">{stageKey}</h3>
       <span
-        className={`roadmap-stage__status ${stageValue ? "completed" : ""}`}
+        className={`roadmap-stage__status ${stageObj.isCompleted ? "completed" : ""}`}
       >
-        {stageValue ? "Done" : "In process"}
+        {stageObj.isCompleted ? "Done" : "In process"}
       </span>
     </div>
   );
