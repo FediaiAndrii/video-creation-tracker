@@ -116,14 +116,6 @@ body::-webkit-scrollbar {
   margin-right: 1.2rem;
 }
 
-.green {
-  color: #66a80f;
-}
-
-.red {
-  color: #e03131;
-}
-
 form {
   font-size: 1.6rem;
   display: grid;
