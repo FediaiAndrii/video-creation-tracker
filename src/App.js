@@ -9,8 +9,6 @@ const initialProjects = [
     type: "Vlog",
     stages: {
       idea: {
-        isCompleted: true,
-
         tasks: [
           { id: 1, text: "Film sketchbook in mountains", done: true },
           { id: 2, text: "Record nature sounds", done: true },
@@ -18,8 +16,6 @@ const initialProjects = [
         ],
       },
       shoot: {
-        isCompleted: true,
-
         tasks: [
           { id: 4, text: "Film sketchbook opening", done: true },
           { id: 5, text: "Film B roll", done: true },
@@ -27,8 +23,6 @@ const initialProjects = [
         ],
       },
       edit: {
-        isCompleted: false,
-
         tasks: [
           { id: 7, text: "Video cutting", done: true },
           { id: 8, text: "Sounds added", done: false },
@@ -36,8 +30,6 @@ const initialProjects = [
         ],
       },
       publish: {
-        isCompleted: false,
-
         tasks: [
           { id: 10, text: "Choose social media", done: false },
           { id: 11, text: "Write description", done: false },
@@ -54,8 +46,6 @@ const initialProjects = [
     type: "Timelaps",
     stages: {
       idea: {
-        isCompleted: true,
-
         tasks: [
           { id: 1, text: "Film sketchbook in mountains", done: true },
           { id: 2, text: "Record nature sounds", done: true },
@@ -63,8 +53,6 @@ const initialProjects = [
         ],
       },
       shoot: {
-        isCompleted: true,
-
         tasks: [
           { id: 4, text: "Film sketchbook opening", done: true },
           { id: 5, text: "Film B roll", done: true },
@@ -72,8 +60,6 @@ const initialProjects = [
         ],
       },
       edit: {
-        isCompleted: true,
-
         tasks: [
           { id: 7, text: "Video cutting", done: true },
           { id: 8, text: "Sounds added", done: true },
@@ -81,8 +67,6 @@ const initialProjects = [
         ],
       },
       publish: {
-        isCompleted: false,
-
         tasks: [
           { id: 10, text: "Choose social media", done: true },
           { id: 11, text: "Write description", done: false },
@@ -99,8 +83,6 @@ const initialProjects = [
     type: "Vlog",
     stages: {
       idea: {
-        isCompleted: true,
-
         tasks: [
           { id: 1, text: "Film sketchbook in mountains", done: true },
           { id: 2, text: "Record nature sounds", done: true },
@@ -108,8 +90,6 @@ const initialProjects = [
         ],
       },
       shoot: {
-        isCompleted: false,
-
         tasks: [
           { id: 4, text: "Film sketchbook opening", done: true },
           { id: 5, text: "Film B roll", done: true },
@@ -117,8 +97,6 @@ const initialProjects = [
         ],
       },
       edit: {
-        isCompleted: false,
-
         tasks: [
           { id: 7, text: "Video cutting", done: false },
           { id: 8, text: "Sounds added", done: false },
@@ -126,8 +104,6 @@ const initialProjects = [
         ],
       },
       publish: {
-        isCompleted: false,
-
         tasks: [
           { id: 10, text: "Choose social media", done: false },
           { id: 11, text: "Write description", done: false },
@@ -147,9 +123,14 @@ const stageLabels = {
 
 function getCurrentStageLabel(project) {
   const activeStageEntry = Object.entries(project.stages).find(
-    ([_, stage]) => stage.isCompleted === false,
+    ([_, stage]) => !checkIsStageCompleted(stage),
   );
   return activeStageEntry ? stageLabels[activeStageEntry[0]] : "Done";
+}
+
+function checkIsStageCompleted(stageObj) {
+  if (stageObj.tasks.length === 0) return false;
+  return stageObj.tasks.every(task => task.done === true);
 }
 
 function Button({ children, onClick }) {
@@ -162,11 +143,15 @@ function Button({ children, onClick }) {
 
 export default function App() {
   const [projects, setProjects] = useState(initialProjects);
-  const [selectedProject, setSelectedProject] = useState(null);
+  const [selectedProjectId, setSelectedProjectId] = useState(null);
   const [showAddProject, setShowAddProject] = useState(false);
 
+  const selectedProject = projects.find(
+    project => project.id === selectedProjectId,
+  );
+
   function handleSelection(project) {
-    setSelectedProject(cur => (cur?.id === project.id ? null : project));
+    setSelectedProjectId(cur => (cur === project.id ? null : project.id));
   }
 
   function handleShowAddProject() {
@@ -178,12 +163,76 @@ export default function App() {
     setShowAddProject(false);
   }
 
+  function handleAddTask(projectId, stageKey, newTask) {
+    setProjects(currentProjects =>
+      currentProjects.map(project => {
+        if (project.id === projectId) {
+          return {
+            ...project,
+            stages: {
+              ...project.stages,
+              [stageKey]: {
+                ...project.stages[stageKey],
+                tasks: [...project.stages[stageKey].tasks, newTask],
+              },
+            },
+          };
+        }
+        return project;
+      }),
+    );
+  }
+
+  function handleToggleTask(projectId, stageKey, taskId) {
+    setProjects(currentProjects =>
+      currentProjects.map(project => {
+        if (project.id === projectId) {
+          return {
+            ...project,
+            stages: {
+              ...project.stages,
+              [stageKey]: {
+                ...project.stages[stageKey],
+                tasks: project.stages[stageKey].tasks.map(task =>
+                  task.id === taskId ? { ...task, done: !task.done } : task,
+                ),
+              },
+            },
+          };
+        }
+        return project;
+      }),
+    );
+  }
+
+  function handleDeleteTask(projectId, stageKey, taskId) {
+    setProjects(currentProjects =>
+      currentProjects.map(project => {
+        if (project.id === projectId) {
+          return {
+            ...project,
+            stages: {
+              ...project.stages,
+              [stageKey]: {
+                ...project.stages[stageKey],
+                tasks: project.stages[stageKey].tasks.filter(
+                  task => task.id !== taskId,
+                ),
+              },
+            },
+          };
+        }
+        return project;
+      }),
+    );
+  }
+
   return (
     <div className="app">
       <div className="sidebar">
         <ProjectList
           projects={projects}
-          selectedProject={selectedProject}
+          selectedProjectId={selectedProjectId}
           onSelection={handleSelection}
         />
 
@@ -192,19 +241,26 @@ export default function App() {
           {showAddProject ? "Close" : "Add project"}
         </Button>
       </div>
-      {selectedProject && <ProjectRoadmap project={selectedProject} />}
+      {selectedProject && (
+        <ProjectRoadmap
+          project={selectedProject}
+          onAddTask={handleAddTask}
+          onToggleTask={handleToggleTask}
+          onDeleteTask={handleDeleteTask}
+        />
+      )}
     </div>
   );
 }
 
-function ProjectList({ projects, selectedProject, onSelection }) {
+function ProjectList({ projects, selectedProjectId, onSelection }) {
   return (
     <ul>
       {projects.map(project => (
         <Project
           project={project}
           key={project.id}
-          selectedProject={selectedProject}
+          selectedProjectId={selectedProjectId}
           onSelection={onSelection}
         />
       ))}
@@ -212,8 +268,8 @@ function ProjectList({ projects, selectedProject, onSelection }) {
   );
 }
 
-function Project({ project, selectedProject, onSelection }) {
-  const isSelected = selectedProject?.id === project.id;
+function Project({ project, selectedProjectId, onSelection }) {
+  const isSelected = selectedProjectId === project.id;
 
   const currentStage = getCurrentStageLabel(project);
 
@@ -248,10 +304,10 @@ function FormAddProject({ onAddProject }) {
       resolution: resolution,
       type: type,
       stages: {
-        idea: { isCompleted: false, isOpen: false, tasks: [] },
-        shoot: { isCompleted: false, isOpen: false, tasks: [] },
-        edit: { isCompleted: false, isOpen: false, tasks: [] },
-        publish: { isCompleted: false, isOpen: false, tasks: [] },
+        idea: { tasks: [] },
+        shoot: { tasks: [] },
+        edit: { tasks: [] },
+        publish: { tasks: [] },
       },
     };
     onAddProject(newProject);
@@ -298,12 +354,17 @@ function FormAddProject({ onAddProject }) {
   );
 }
 
-function ProjectRoadmap({ project }) {
+function ProjectRoadmap({ project, onAddTask, onToggleTask, onDeleteTask }) {
   return (
     <div className="project-roadmap">
       <RoadmapHeader project={project} />
       <RoadmapProgress stages={project.stages} />
-      <RoadmapStages project={project} />
+      <RoadmapStages
+        project={project}
+        onAddTask={onAddTask}
+        onToggleTask={onToggleTask}
+        onDeleteTask={onDeleteTask}
+      />
     </div>
   );
 }
@@ -337,45 +398,130 @@ function RoadmapProgress({ stages }) {
 
   return (
     <div className="roadmap-progress-bar">
-      {stagesArray.map(([stageKey, stageObj]) => (
-        <div
-          key={stageKey}
-          className={`stage-segment ${stageObj.isCompleted ? "completed" : ""}`}
-        >
-          {stageLabels[stageKey]}
-        </div>
-      ))}
+      {stagesArray.map(([stageKey, stageObj]) => {
+        const isCompleted = checkIsStageCompleted(stageObj);
+        return (
+          <div
+            key={stageKey}
+            className={`stage-segment ${isCompleted ? "completed" : ""}`}
+          >
+            {stageLabels[stageKey]}
+          </div>
+        );
+      })}
     </div>
   );
 }
 
-function RoadmapStages({ project }) {
+function RoadmapStages({ project, onAddTask, onToggleTask, onDeleteTask }) {
   const stagesArray = Object.entries(project.stages);
   return (
     <div className="roadmap-stages">
       {stagesArray.map(stage => (
-        <Stage key={stage[0]} stage={stage} />
+        <Stage
+          key={stage[0]}
+          stage={stage}
+          onAddTask={onAddTask}
+          onToggleTask={onToggleTask}
+          onDeleteTask={onDeleteTask}
+          projectId={project.id}
+        />
       ))}
     </div>
   );
 }
 
-function Stage({ stage }) {
+function Stage({ stage, onAddTask, onToggleTask, onDeleteTask, projectId }) {
   const [stageKey, stageObj] = stage;
   const [isOpen, setIsOpen] = useState(false);
+
+  const isCompleted = checkIsStageCompleted(stageObj);
 
   function handleToggle() {
     setIsOpen(show => !show);
   }
 
   return (
-    <div className="roadmap-stage">
-      <h3 className="roadmap-stage__name">{stageKey}</h3>
-      <span
-        className={`roadmap-stage__status ${stageObj.isCompleted ? "completed" : ""}`}
-      >
-        {stageObj.isCompleted ? "Done" : "In process"}
-      </span>
+    <div className="stage-container">
+      <div className="roadmap-stage" onClick={handleToggle}>
+        <span className="roadmap-stage__name">{stageKey}</span>
+        <div className="stage-toggle">
+          <span>{isOpen ? "-" : "+"}</span>
+        </div>
+        <span
+          className={`roadmap-stage__status ${isCompleted ? "completed" : ""}`}
+        >
+          {isCompleted ? "Done" : "In process"}
+        </span>
+      </div>
+      {isOpen && (
+        <div className="stage-tasks">
+          <StageTasksList
+            tasks={stageObj.tasks}
+            onToggleTask={onToggleTask}
+            onDeleteTask={onDeleteTask}
+            projectId={projectId}
+            stageKey={stageKey}
+          />
+          <StageTaskForm
+            onAddTask={onAddTask}
+            projectId={projectId}
+            stageKey={stageKey}
+          />
+        </div>
+      )}
     </div>
+  );
+}
+
+function StageTaskForm({ onAddTask, projectId, stageKey }) {
+  const [task, setTask] = useState("");
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (!task) return;
+    const newTask = { id: crypto.randomUUID(), text: task, done: false };
+
+    onAddTask(projectId, stageKey, newTask);
+
+    setTask("");
+  }
+
+  return (
+    <form className="add-task" onSubmit={handleSubmit}>
+      <input
+        type="text"
+        value={task}
+        onChange={e => setTask(e.target.value)}
+        placeholder="Write your task"
+      ></input>
+      <button className="button">Add</button>
+    </form>
+  );
+}
+
+function StageTasksList({
+  tasks,
+  projectId,
+  onToggleTask,
+  onDeleteTask,
+  stageKey,
+}) {
+  return (
+    <ul className="tasks-list">
+      {tasks.map(task => (
+        <li key={task.id}>
+          <input
+            type="checkbox"
+            checked={task.done}
+            onChange={() => onToggleTask(projectId, stageKey, task.id)}
+          />
+          <span>{task.text}</span>
+          <button onClick={() => onDeleteTask(projectId, stageKey, task.id)}>
+            ❌
+          </button>
+        </li>
+      ))}
+    </ul>
   );
 }

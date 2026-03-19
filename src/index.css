@@ -24,11 +24,23 @@ html {
 }
 
 body {
-  height: 100vh;
+  min-height: 100vh;
   color: var(--color-black);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+  padding-top: 10rem;
+}
+
+html,
+body {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
 }
 
 .app {
@@ -216,9 +228,15 @@ form {
   gap: 1.2rem;
 }
 
+.stage-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
 .roadmap-stage {
   display: grid;
-  grid-template-columns: 1fr 13rem;
+  grid-template-columns: 1fr 3rem 13rem;
   width: 100%;
   height: 3rem;
   color: var(--color-black);
@@ -237,7 +255,30 @@ form {
   width: 100%;
   height: 100%;
   background-color: var(--color-medium);
+  /* border-right: 1px solid var(--color-grey); */
+}
+
+.stage-toggle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  font-size: 2rem;
+  background-color: var(--color-medium);
   border-right: 1px solid var(--color-grey);
+}
+
+.stage-toggle span {
+  transform: translateY(-2px);
+}
+
+.stage-tasks {
+  width: 100%;
+  min-height: 10rem;
+  background-color: var(--color-light);
+  padding: 2rem;
+  margin-top: 0.5rem;
+  border-radius: 7px;
 }
 
 .roadmap-stage__status {
@@ -253,6 +294,60 @@ form {
 .roadmap-stage__status.completed {
   background-color: #59b959a2;
   color: var(--color-black);
+}
+
+.tasks-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin-bottom: 2rem;
+}
+
+.tasks-list li {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  font-size: 1.4rem;
+  padding: 0.8rem 1.2rem;
+}
+
+.tasks-list span {
+  flex: 1;
+}
+
+.tasks-list button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.4rem;
+  transition: transform 0.3s;
+  margin-right: 2rem;
+}
+
+.tasks-list button:hover {
+  transform: scale(1.2);
+}
+
+form.add-task {
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+  background-color: transparent;
+  padding: 0;
+}
+
+form.add-task input {
+  max-width: 36.5rem;
+  width: 100%;
+  border-radius: 7px;
+  background-color: var(--color-lightest);
+  border: 1px solid var(--color-medium);
+}
+
+form.add-task button {
+  align-self: center;
+  width: 10rem;
 }
 
 label {
@@ -284,7 +379,6 @@ select:focus {
 }
 
 form .button {
-  margin-top: 0.6rem;
   grid-column: 2;
 }
 
