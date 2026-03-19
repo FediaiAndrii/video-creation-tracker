@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/video-creation-tracker/static/css/main.fd8ab25b.css",
+    "main.js": "/video-creation-tracker/static/js/main.2575896e.js",
+    "index.html": "/video-creation-tracker/index.html",
+    "main.fd8ab25b.css.map": "/video-creation-tracker/static/css/main.fd8ab25b.css.map",
+    "main.2575896e.js.map": "/video-creation-tracker/static/js/main.2575896e.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.fd8ab25b.css",
+    "static/js/main.2575896e.js"
+  ]
+}
