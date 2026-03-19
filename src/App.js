@@ -107,6 +107,7 @@ export default function App() {
       </div>
       {selectedProject && (
         <ProjectRoadmap
+          key={selectedProject.id}
           project={selectedProject}
           onAddTask={handleAddTask}
           onToggleTask={handleToggleTask}
