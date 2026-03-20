@@ -76,6 +76,7 @@ function Stage({ stage, onAddTask, onToggleTask, onDeleteTask, projectId }) {
     </div>
   );
 }
+
 function StageTaskForm({ onAddTask, projectId, stageKey }) {
   const [task, setTask] = useState("");
 
@@ -101,6 +102,7 @@ function StageTaskForm({ onAddTask, projectId, stageKey }) {
     </form>
   );
 }
+
 function StageTasksList({
   tasks,
   projectId,
