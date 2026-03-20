@@ -321,6 +321,16 @@ form {
   transform: scale(1.2);
 }
 
+.button-delete {
+  background-color: #da604b;
+  color: var(--color-lightest);
+  width: 13rem;
+}
+
+.button-delete:hover {
+  background-color: #c93c23;
+}
+
 form.add-task {
   display: flex;
   align-items: center;

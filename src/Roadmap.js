@@ -1,4 +1,4 @@
-import { RoadmapStages } from "./App";
+import { RoadmapStages } from "./Stage";
 import { getCurrentStageLabel } from "./Stage";
 import { checkIsStageCompleted } from "./Stage";
 import { stageLabels } from "./data";
@@ -8,6 +8,7 @@ export function ProjectRoadmap({
   onAddTask,
   onToggleTask,
   onDeleteTask,
+  onDeleteProject,
 }) {
   return (
     <div className="project-roadmap">
@@ -19,6 +20,14 @@ export function ProjectRoadmap({
         onToggleTask={onToggleTask}
         onDeleteTask={onDeleteTask}
       />
+      <div style={{ alignSelf: "flex-end" }}>
+        <button
+          className="button button-delete"
+          onClick={() => onDeleteProject(project.id)}
+        >
+          Delete
+        </button>
+      </div>
     </div>
   );
 }
